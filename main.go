@@ -1,9 +1,8 @@
-/*
-Copyright © 2022 NAME HERE <EMAIL ADDRESS>
-*/
 package main
 
-import "github.com/andruhh/gotodo/cmd"
+import (
+	"github.com/andruhh/gotodo/cmd"
+)
 
 func main() {
 	cmd.Execute()

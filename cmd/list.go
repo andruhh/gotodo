@@ -11,10 +11,16 @@ func init() {
 }
   
 var listCommand = &cobra.Command{
-	Use:   "remove",
+	Use:   "list",
 	Short: "Prints TODO list",
-	Long:  `Prints TODO list of all current list items.`,
+	Long:  `Prints TODO list of all current TODO items.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("Listing...")
+		if len(todoList) <= 0 {
+			fmt.Println("No items in list.")
+		} else {
+			for _, item := range todoList {
+				fmt.Printf("%v. %v\n", item.number, item.text)
+			}
+		}
 	},
 }

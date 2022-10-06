@@ -1,6 +1,3 @@
-/*
-Copyright © 2022 NAME HERE <EMAIL ADDRESS>
-*/
 package cmd
 
 import (
@@ -9,23 +6,21 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// rootCmd represents the base command when called without any subcommands
+type TodoItem struct {
+	number int
+	text string
+}
+
+var todoList = []TodoItem{{number: 1, text: "Get milk"}, {number:2, text:"feed dogs"}}
+var selectedNumber int
+var newItemText string
+
 var rootCmd = &cobra.Command{
 	Use:   "gotodo",
 	Short: "TODO List CLI",
-	Long: `Welcome to your TODO List. You can View, Add, Edit, or Remove. For example:
-	
-	Type: 'gotodo list' to view your list.
-	Type: 'gotodo add [ITEM NAME]' to add a new TODO item.
-	Type: 'gotodo edit [ID]' to edit existing items.
-	Type: 'gotodo remove [ID]' to remove an item from the list.`,
-	// Uncomment the following line if your bare application
-	// has an action associated with it:
-	// Run: func(cmd *cobra.Command, args []string) { },
+	Long: `Welcome to your TODO List. You can View, Add, Edit, or Remove.`,
 }
 
-// Execute adds all child commands to the root command and sets flags appropriately.
-// This is called by main.main(). It only needs to happen once to the rootCmd.
 func Execute() {
 	err := rootCmd.Execute()
 	if err != nil {
@@ -34,15 +29,23 @@ func Execute() {
 }
 
 func init() {
-	// Here you will define your flags and configuration settings.
-	// Cobra supports persistent flags, which, if defined here,
-	// will be global for your application.
-
-	// rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.gotodo.yaml)")
-
-	// Cobra also supports local flags, which will only run
-	// when this action is called directly.
-	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	removeCommand.Flags().IntVar(&selectedNumber, "number", 0, "number of the item you wish to remove")
+	editCommand.Flags().IntVar(&selectedNumber, "number", 0, "number of the item you wish to edit")
+	newCommand.Flags().StringVarP(&newItemText, "text", "t", "", "Text of the list item")
 }
 
+func removeItem(index int) {
+	list := append(todoList[:index], todoList[index + 1:]...)
+	for index, item := range list {
+		item.number = index + 1
+		list[index] = item
+	}
+	todoList = list
+}
+
+func updateItemText(index int, text string) {
+	item := todoList[index]
+	item.text = text
+	todoList[index] = item
+}
 
